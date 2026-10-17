@@ -1,0 +1,13 @@
+
+
+# Keil 编译生成文件
+Objects/
+Listings/
+
+# Keil 用户个人配置
+*.uvguix.*
+*.uvgui.*
+
+# Windows 文件
+Thumbs.db
+Desktop.ini
