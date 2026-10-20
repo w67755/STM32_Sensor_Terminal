@@ -5,11 +5,17 @@
 #include "Key.h"
 #include "Calibration.h"
 #include "Serial.h"
+#include "AD.h"
+#include "SensorPage.h"
+
 uint8_t ID;
 int16_t AX, AY, AZ, GX, GY, GZ;
 uint8_t page = 0;
 
 uint8_t Serialcount;
+uint16_t TempADC;
+uint16_t LightADC;
+uint16_t IRADC;
  
 
 
@@ -19,6 +25,7 @@ int main(void)
 	MPU6050_Init();
 	Key_Init();
 	Serial_Init();
+	AD_Init();
 	
 	Serial_SendString("MPU6050 start\r\n");
 	
@@ -49,70 +56,37 @@ int main(void)
 	}
 	
 
-    if (page == 0)  // 加速度页
-    {
-        OLED_ShowString(2, 1, "AX:");
-        OLED_ShowChar(2, 4, (AX < 0) ? '-' : '+');
-        OLED_ShowNum(2, 5, (AX < 0 ? -AX : AX) / 2048, 1);
-        OLED_ShowChar(2, 6, '.');
-        OLED_ShowNum(2, 7, ((AX < 0 ? -AX : AX) % 2048) * 100 / 2048, 2);
-        OLED_ShowChar(2, 9, 'g');
-        OLED_ShowString(2, 10, "   ");  // 清除旧的 dps
-
-        OLED_ShowString(3, 1, "AY:");
-        OLED_ShowChar(3, 4, (AY < 0) ? '-' : '+');
-        OLED_ShowNum(3, 5, (AY < 0 ? -AY : AY) / 2048, 1);
-        OLED_ShowChar(3, 6, '.');
-        OLED_ShowNum(3, 7, ((AY < 0 ? -AY : AY) % 2048) * 100 / 2048, 2);
-        OLED_ShowChar(3, 9, 'g');
-        OLED_ShowString(3, 10, "   ");
-
-        OLED_ShowString(4, 1, "AZ:");
-        OLED_ShowChar(4, 4, (AZ < 0) ? '-' : '+');
-        OLED_ShowNum(4, 5, (AZ < 0 ? -AZ : AZ) / 2048, 1);
-        OLED_ShowChar(4, 6, '.');
-        OLED_ShowNum(4, 7, ((AZ < 0 ? -AZ : AZ) % 2048) * 100 / 2048, 2);
-        OLED_ShowChar(4, 9, 'g');
-        OLED_ShowString(4, 10, "   ");
-    }
-    else  // 角速度页
-    {
-        OLED_ShowString(2, 1, "GX:");
-        OLED_ShowChar(2, 4, (GX < 0) ? '-' : '+');
-        OLED_ShowNum(2, 5, (GX < 0 ? -GX : GX) * 10 / 164, 2);
-        OLED_ShowChar(2, 7, '.');
-        OLED_ShowNum(2, 8, (((GX < 0 ? -GX : GX) * 10) % 164) * 100 / 164, 2);
-        OLED_ShowString(2, 10, "dps");
-
-        OLED_ShowString(3, 1, "GY:");
-        OLED_ShowChar(3, 4, (GY < 0) ? '-' : '+');
-        OLED_ShowNum(3, 5, (GY < 0 ? -GY : GY) * 10 / 164, 2);
-        OLED_ShowChar(3, 7, '.');
-        OLED_ShowNum(3, 8, (((GY < 0 ? -GY : GY) * 10) % 164) * 100 / 164, 2);
-        OLED_ShowString(3, 10, "dps");
-
-        OLED_ShowString(4, 1, "GZ:");
-        OLED_ShowChar(4, 4, (GZ < 0) ? '-' : '+');
-        OLED_ShowNum(4, 5, (GZ < 0 ? -GZ : GZ) * 10 / 164, 2);
-        OLED_ShowChar(4, 7, '.');
-        OLED_ShowNum(4, 8, (((GZ < 0 ? -GZ : GZ) *10) % 164) * 100 / 164, 2);
-        OLED_ShowString(4, 10, "dps");
-    }
+    SensorPage_Show(page, AX, AY, AZ, GX, GY, GZ);
 
     Delay_ms(100);
-    if (Key_GetNum() == 1)
+   if (Key_GetNum() == 1)
 {
-    page = !page;
+    page++;
+
+    if (page >= 4)
+    {
+        page = 0;
+    }
+
+    OLED_Clear();
 
     if (page == 0)
     {
-        OLED_ShowString(1, 1, "ACC ID: ");
+        OLED_ShowString(1, 1, "ACC ID:");
         OLED_ShowHexNum(1, 9, ID, 2);
     }
-    else
+    else if (page == 1)
     {
         OLED_ShowString(1, 1, "GYRO ID:");
         OLED_ShowHexNum(1, 9, ID, 2);
+    }
+    else if (page == 2)
+    {
+        OLED_ShowString(1, 1, "TEMP SENSOR");
+    }
+    else  // page == 3
+    {
+        OLED_ShowString(1, 1, "LIGHT SENSOR");
     }
 }
 }

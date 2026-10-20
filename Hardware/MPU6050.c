@@ -103,7 +103,7 @@ void MPU6050_Init(void)
 
 uint8_t MPU6050_GetID(void)
 {
-	return MPU6050_ReadReg(MPU6050_WHO_AM_I);
+	return MPU6050_ReadReg(MPU6050_WHO_AM_I);    
 }
 
 

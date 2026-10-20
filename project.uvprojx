@@ -725,6 +725,26 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\Serial.h</FilePath>
             </File>
+            <File>
+              <FileName>AD.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\AD.c</FilePath>
+            </File>
+            <File>
+              <FileName>AD.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\AD.h</FilePath>
+            </File>
+            <File>
+              <FileName>SensorPage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\SensorPage.c</FilePath>
+            </File>
+            <File>
+              <FileName>SensorPage.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\SensorPage.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
