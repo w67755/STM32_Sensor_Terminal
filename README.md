@@ -13,11 +13,10 @@
 
 > 热敏电阻和光敏电阻页面显示的是 ADC 原始值，尚未转换为摄氏温度或照度。DHT11 的温度和湿度由其数字通信协议直接读取，不使用 ADC。
 
-## Project Demo1
-
-
-## Project Demo2
-
+## 项目视频1
+https://github.com/w67755/STM32_Sensor_Terminal/blob/main/Project%20Demo1.mp4
+## 项目视频2
+https://github.com/w67755/STM32_Sensor_Terminal/blame/main/Project%20Demo2.mp4
 
 
 ## 硬件与开发环境
