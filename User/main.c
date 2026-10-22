@@ -7,6 +7,7 @@
 #include "Serial.h"
 #include "AD.h"
 #include "SensorPage.h"
+#include "DHT11.h"
 
 uint8_t ID;
 int16_t AX, AY, AZ, GX, GY, GZ;
@@ -16,6 +17,8 @@ uint8_t Serialcount;
 uint16_t TempADC;
 uint16_t LightADC;
 uint16_t IRADC;
+uint8_t DHT11_Temp, DHT11_Humid;
+uint8_t DHT11_Counter = 0;
  
 
 
@@ -26,6 +29,7 @@ int main(void)
 	Key_Init();
 	Serial_Init();
 	AD_Init();
+	DHT11_Init();
 	
 	Serial_SendString("MPU6050 start\r\n");
 	
@@ -48,6 +52,13 @@ int main(void)
     MPU6050_GetData(&AX, &AY, &AZ, &GX, &GY, &GZ);
 	MPU_GyroCompensate(&GX , &GY, &GZ);
 	
+	DHT11_Counter++;
+	if (DHT11_Counter >= 20)
+	{
+    DHT11_Counter = 0;
+    DHT11_ReceiveData(&DHT11_Temp, &DHT11_Humid);
+	}
+	
 	Serialcount ++;
 	if (Serialcount >= 5)
 	{
@@ -63,13 +74,13 @@ int main(void)
 {
     page++;
 
-    if (page >= 4)
+    if (page >= 5)
     {
         page = 0;
     }
 
     OLED_Clear();
-
+}
     if (page == 0)
     {
         OLED_ShowString(1, 1, "ACC ID:");
@@ -84,10 +95,22 @@ int main(void)
     {
         OLED_ShowString(1, 1, "TEMP SENSOR");
     }
-    else  // page == 3
+    else if (page == 3)
     {
         OLED_ShowString(1, 1, "LIGHT SENSOR");
     }
-}
+	else
+	{
+		OLED_ShowString(1, 1, "DHT11");
+
+		OLED_ShowString(2, 1, "Temp:");
+		OLED_ShowString(3, 1, "Humi:");
+		OLED_ShowNum(2, 7, DHT11_Temp, 2);
+        OLED_ShowChar(2, 9, 'C');
+
+        OLED_ShowNum(3, 7, DHT11_Humid, 2);
+        OLED_ShowChar(3, 9, '%');
+	}		
+
 }
 	}
